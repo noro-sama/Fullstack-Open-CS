@@ -6,26 +6,6 @@ const Button = ({ text, onClick }) => (
   </>
 );
 
-const StatisticsLine = ({ text, val }) => {
-  return (
-    <>
-      <p>
-        {text} {val}
-      </p>
-    </>
-  );
-};
-
-const Statistics = ({ stats }) => {
-  return (
-    <>
-      <StatisticsLine text="average" val={stats.avg} />
-      <StatisticsLine text="positive" val={stats.percent} />
-      <StatisticsLine text="total" val={stats.votes} />
-    </>
-  );
-};
-
 function App() {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
