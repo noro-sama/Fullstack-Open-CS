@@ -32,27 +32,21 @@ function App() {
   const [bad, setBad] = useState(0);
 
   const handleClickGood = () => {
-    console.log("before", good);
     setGood((prev) => prev + 1);
   };
 
   const handleClickNeutral = () => {
-    console.log("before,", neutral);
     setNeutral((prev) => prev + 1);
   };
 
   const handleClickBad = () => {
-    console.log("before,", bad);
     setBad((prev) => prev + 1);
   };
 
   const total = good + bad + neutral;
   const average = total / 3;
   const positive = good > 0 ? (good / total) * 100 : 0;
-  console.log(total, average, positive);
-  console.log(good, bad, neutral);
-  const statistics = { avg: average, percent: positive, votes: total };
-  console.log(statistics);
+
   return (
     <>
       <h1>Give Feedback</h1>
@@ -60,7 +54,44 @@ function App() {
       <Button text="neutral" onClick={handleClickNeutral} />
       <Button text="bad" onClick={handleClickBad} />
       <h2>Statistics</h2>
-      {total === 0 ? "No feedback given" : <Statistics stats={statistics} />}
+      {total === 0 ? (
+        <p>No feedback given</p>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>good</td>
+              <td>{good}</td>
+            </tr>
+            <tr>
+              <td>neutral</td>
+              <td>{neutral}</td>
+            </tr>
+            <tr>
+              <td>bad</td>
+              <td>{bad}</td>
+            </tr>
+            <tr>
+              <td>all</td>
+              <td>{total}</td>
+            </tr>
+            <tr>
+              <td>avrage</td>
+              <td>{average}</td>
+            </tr>
+            <tr>
+              <td>positive</td>
+              <td>{positive}%</td>
+            </tr>
+          </tbody>
+        </table>
+      )}
     </>
   );
 }
