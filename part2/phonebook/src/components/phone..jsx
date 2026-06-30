@@ -26,14 +26,10 @@ export const PhoneForm = ({ onSubmit, onNameChange, onNumberChange }) => (
   </form>
 );
 
-export const Numbers = ({ phonebook }) => (
+export const Person = ({ details, onClick }) => (
   <>
-    <ul>
-      {phonebook.map((item) => (
-        <li key={item.name}>
-          {item.name} {item.number}
-        </li>
-      ))}
-    </ul>
+    <li>
+      {details.name} {details.number} <button onClick={onClick}>delete</button>
+    </li>
   </>
 );

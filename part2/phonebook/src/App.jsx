@@ -1,55 +1,97 @@
-import { useState } from "react";
-import { PhoneForm, Numbers, Filter } from "./components/phone.";
+import { useState, useEffect } from "react";
+import { PhoneForm, Person, Filter } from "./components/phone.";
+import personsService from "./services/persons.js";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [query, setQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    personsService.getAll("http://localhost:3001/persons").then((response) => {
+      console.log("promise fulfilled");
+      setPersons(response);
+    });
+  }, []);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (newName === "" || newNumber === "") {
+    if (newName.trim() === "" || newNumber.trim() === "") {
       alert("please fill in all the fields");
       return;
     }
 
-    let isDuplicateName = false;
-    let isDuplicateNumber = false;
+    const nameExists = persons.find((person) => person.name === newName);
 
-    persons.forEach((person) => {
-      if (person.name === newName) {
-        isDuplicateName = true;
-      } else if (person.number === newNumber) {
-        isDuplicateNumber = true;
+    const numberExists = persons.find((person) => person.number === newNumber);
+
+    if (nameExists && !numberExists) {
+      const userConfirmed = window.confirm(
+        `${nameExists.name} is already added  to the phonebook. Replace old number with new one? This cannot be undone.`,
+      );
+      if (userConfirmed) {
+        personsService
+          .updateNumber(nameExists.id, {
+            name: nameExists.name,
+            number: newNumber,
+          })
+          .then((returnedContact) => {
+            setPersons(
+              persons.map((contact) =>
+                contact.id !== returnedContact.id ? contact : returnedContact,
+              ),
+            );
+          })
+          .catch((err) => {
+            console.error("Failed to Update contact", err);
+          });
+      } else {
+        console.log("Contact update canceled by user.");
       }
-    });
-
-    if (isDuplicateName) {
-      alert(`${newName} is already added to phonebook`);
-    } else if (isDuplicateNumber) {
-      alert(`${newNumber} is already added to phonebook`);
     } else {
-      setPersons((prev) => {
-        const arr = [...prev];
-        arr.push({ name: newName, number: newNumber });
-        return arr;
-      });
+      personsService
+        .create({ name: newName, number: newNumber })
+        .then((data) => setPersons(persons.concat(data)))
+        .catch((err) => {
+          console.error("Failed to create contact:", err);
+        })
+        .finally(() => {
+          setNewName("");
+          setNewNumber("");
+        });
     }
   };
-  console.log(persons);
   const handleNameChange = (e) => {
     setNewName(e.target.value);
   };
 
   const handleNumberChange = (e) => {
     setNewNumber(e.target.value);
+  };
+
+  const handleDelete = (id) => {
+    const person = personsToShow?.find((person) => person.id === id);
+    const userConfirmed = window.confirm(
+      `Are you sure you want to delete contact ${person.name}? This cannot be undone.`,
+    );
+
+    if (userConfirmed) {
+      personsService
+        .deleteItem(person.id)
+        .then(() => {
+          personsService.getAll().then((updatedPersons) => {
+            setPersons(updatedPersons);
+          });
+        })
+        .catch((err) => {
+          console.error("Failed to Delete contact", err);
+        });
+    } else {
+      console.log("Deletion canceled by user.");
+    }
   };
 
   const handleSearch = (e) => {
@@ -69,13 +111,29 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Filter onChange={handleSearch} />
+      <h2>Add a new Contact</h2>
       <PhoneForm
         onNameChange={handleNameChange}
         onNumberChange={handleNumberChange}
         onSubmit={handleFormSubmit}
       />
       <h2>Numbers</h2>
-      <Numbers phonebook={personsToShow} />
+
+      {isLoading ? (
+        <div>loading...</div>
+      ) : (
+        <ul>
+          {personsToShow?.map((item) => (
+            <Person
+              key={item.id}
+              details={item}
+              onClick={() => {
+                handleDelete(item.id);
+              }}
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
