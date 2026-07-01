@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { PhoneForm, Person, Filter } from "./components/phone.";
 import personsService from "./services/persons.js";
+import {
+  SuccessNotification,
+  ErrorNotification,
+} from "./components/Notification.jsx";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -8,11 +12,11 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [query, setQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     personsService.getAll("http://localhost:3001/persons").then((response) => {
-      console.log("promise fulfilled");
       setPersons(response);
     });
   }, []);
@@ -39,6 +43,10 @@ const App = () => {
             number: newNumber,
           })
           .then((returnedContact) => {
+            setSuccessMessage(`Contact '${returnedContact.name}' was updated`);
+            setTimeout(() => {
+              setSuccessMessage(null);
+            }, 5000);
             setPersons(
               persons.map((contact) =>
                 contact.id !== returnedContact.id ? contact : returnedContact,
@@ -46,6 +54,13 @@ const App = () => {
             );
           })
           .catch((err) => {
+            setErrorMessage(
+              `'${nameExists.name}' was already deleted from server`,
+            );
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000);
+            setPersons(persons.filter((p) => p.id !== nameExists.id));
             console.error("Failed to Update contact", err);
           });
       } else {
@@ -54,16 +69,27 @@ const App = () => {
     } else {
       personsService
         .create({ name: newName, number: newNumber })
-        .then((data) => setPersons(persons.concat(data)))
+        .then((data) => {
+          setSuccessMessage(`New contact ${newName} was updated`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 5000);
+          setPersons(persons.concat(data));
+        })
         .catch((err) => {
+          setErrorMessage(` could not be create ne contact`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
           console.error("Failed to create contact:", err);
         })
         .finally(() => {
-          setNewName("");
-          setNewNumber("");
+          // setNewName("");
+          //setNewNumber("");
         });
     }
   };
+
   const handleNameChange = (e) => {
     setNewName(e.target.value);
   };
@@ -82,11 +108,19 @@ const App = () => {
       personsService
         .deleteItem(person.id)
         .then(() => {
+          setSuccessMessage(`Contact ${person.name} was successfuly deleted`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 5000);
           personsService.getAll().then((updatedPersons) => {
             setPersons(updatedPersons);
           });
         })
         .catch((err) => {
+          setErrorMessage(` could not delete contact`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
           console.error("Failed to Delete contact", err);
         });
     } else {
@@ -110,6 +144,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessNotification message={successMessage} />
+      <ErrorNotification message={errorMessage} />
       <Filter onChange={handleSearch} />
       <h2>Add a new Contact</h2>
       <PhoneForm
@@ -118,22 +154,17 @@ const App = () => {
         onSubmit={handleFormSubmit}
       />
       <h2>Numbers</h2>
-
-      {isLoading ? (
-        <div>loading...</div>
-      ) : (
-        <ul>
-          {personsToShow?.map((item) => (
-            <Person
-              key={item.id}
-              details={item}
-              onClick={() => {
-                handleDelete(item.id);
-              }}
-            />
-          ))}
-        </ul>
-      )}
+      <ul>
+        {personsToShow?.map((item) => (
+          <Person
+            key={item.id}
+            details={item}
+            onClick={() => {
+              handleDelete(item.id);
+            }}
+          />
+        ))}
+      </ul>
     </div>
   );
 };

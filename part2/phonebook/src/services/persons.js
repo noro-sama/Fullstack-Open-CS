@@ -9,7 +9,6 @@ const getAll = () => {
     })
     .catch((err) => {
       console.error("Failed to fetch contacts", err);
-      console.log("something went wrong fetching the contacts");
     });
 };
 
