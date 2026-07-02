@@ -1,0 +1,78 @@
+* {
+  box-sizing: border-box;
+}
+.body {
+  background-color: aliceblue;
+}
+
+header {
+  margin: 0 auto;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.search {
+  padding: 5px;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: rgb(175, 206, 252);
+  cursor: pointer;
+  border: 1px solid rgb(175, 206, 252);
+  border-radius: 7px;
+}
+
+button:active {
+  background-color: rgb(88, 183, 247);
+}
+
+.results {
+  background-color: rgb(155, 155, 250);
+  padding: 1em;
+}
+
+.weather {
+  width: 100%;
+  padding: 1rem;
+  background-color: rgb(172, 88, 252);
+}
+
+.details {
+  display: flex;
+  align-items: baseline;
+  width: 80%;
+  justify-content: space-between;
+}
+
+.details p {
+  background-color: rgb(197, 140, 250);
+  padding: 5px 10px;
+  border: 1px solid rgb(197, 140, 250);
+  border-radius: 7px;
+}
+
+.match {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  border-bottom: 1px solid rgb(23, 19, 61);
+  padding: 5px 10px;
+}
+
+.country-details {
+  background-color: aliceblue;
+  padding: 1rem;
+}
+
+.country-details article {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-bottom: 2rem;
+}
+
+.country-details h1 {
+  text-align: center;
+}
