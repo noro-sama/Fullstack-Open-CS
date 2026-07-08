@@ -1,5 +1,7 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
+const Contact = require("./models/contact.js");
 const app = express();
 app.use(express.json());
 app.use(express.static("dist"));
@@ -44,7 +46,9 @@ let persons = [
 ];
 
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Contact.find({}).then((contacts) => {
+    response.json(contacts);
+  });
 });
 
 app.get("/info", (request, response) => {
@@ -56,13 +60,14 @@ app.get("/info", (request, response) => {
 });
 
 app.get("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
-  const contact = persons.find((person) => person.id === id);
-  if (id) {
-    res.json(contact);
-  } else {
-    res.status(404).end();
-  }
+  Contact.findById(req.params.id)
+    .then((contact) => {
+      res.json(contact);
+    })
+    .catch((error) => {
+      console.log("An error ocurred", error.message);
+      res.status(404).end();
+    });
 });
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -90,22 +95,31 @@ app.post("/api/persons", (req, res) => {
     });
   }
 
-  const contactExists = persons.find((p) => p.name === body.name);
+  const person = new Contact({
+    name: body.name,
+    number: body.number,
+  });
 
-  if (contactExists) {
-    return res.status(409).json({
-      error: "name aready exists. all names should be unique",
-    });
-  } else {
-    const person = {
-      id: generateID(),
-      name: body.name,
-      number: body.number,
-    };
+  person.save().then((savedContact) => {
+    res.json(savedContact);
+  });
 
-    persons = persons.concat(person);
-    res.json(person);
-  }
+  // const contactExists = persons.find((p) => p.name === body.name);
+
+  //   if (contactExists) {
+  //     return res.status(409).json({
+  //       error: "name aready exists. all names should be unique",
+  //     });
+  //   } else {
+  //     const person = {
+  //       id: generateID(),
+  //       name: body.name,
+  //       number: body.number,
+  //     };
+
+  //     persons = persons.concat(person);
+  //     res.json(person);
+  //   }
 });
 
 const unknownEndpoint = (request, response) => {
@@ -114,7 +128,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
