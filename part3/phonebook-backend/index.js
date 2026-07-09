@@ -71,55 +71,56 @@ app.get("/api/persons/:id", (req, res) => {
 });
 
 app.delete("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
-  persons = persons.filter((p) => p.id !== id);
-
-  res.status(204).end();
+  Contact.findByIdAndDelete(req.params.id)
+    .then((result) => {
+      res.status(204).end();
+    })
+    .catch((error) => next(error));
 });
 
-const generateID = () => {
-  const id = Math.floor(Math.random() * 770 + persons.length);
-  return String(id);
-};
-
 app.post("/api/persons", (req, res) => {
-  const body = req.body;
+  const { name, number } = req.body;
 
-  if (!body.name) {
-    return res.status(404).json({
-      error: "name missing",
-    });
-  } else if (!body.number) {
-    return res.status(404).json({
-      error: "number missing",
+  if (!name || !number) {
+    return res.status(400).json({
+      error: "Name and number are required",
     });
   }
-
-  const person = new Contact({
-    name: body.name,
-    number: body.number,
+  const newPerson = new Contact({
+    name: name,
+    number: number,
   });
 
-  person.save().then((savedContact) => {
-    res.json(savedContact);
-  });
+  newPerson
+    .save()
+    .then((savedContact) => {
+      res.json(savedContact);
+    })
+    .catch((error) => next(error));
+});
 
-  // const contactExists = persons.find((p) => p.name === body.name);
+app.put("/api/persons/:id", (req, res, next) => {
+  const { name, number } = req.body;
 
-  //   if (contactExists) {
-  //     return res.status(409).json({
-  //       error: "name aready exists. all names should be unique",
-  //     });
-  //   } else {
-  //     const person = {
-  //       id: generateID(),
-  //       name: body.name,
-  //       number: body.number,
-  //     };
+  if (!name || !number) {
+    return res.status(400).json({
+      error: "Name and number are required",
+    });
+  }
+  Contact.findById(req.params.id)
+    .then((person) => {
+      if (!person) {
+        return res.status(404).end();
+      }
+      person.name = name;
+      person.number = number;
 
-  //     persons = persons.concat(person);
-  //     res.json(person);
-  //   }
+      return person.save();
+    })
+    .then((updatedContact) => {
+      res.json(updatedContact);
+    })
+    .catch((error) => next(error));
 });
 
 const unknownEndpoint = (request, response) => {
@@ -127,6 +128,18 @@ const unknownEndpoint = (request, response) => {
 };
 
 app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

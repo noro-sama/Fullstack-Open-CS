@@ -29,14 +29,13 @@ const App = () => {
     }
 
     const nameExists = persons.find((person) => person.name === newName);
-
-    const numberExists = persons.find((person) => person.number === newNumber);
-
-    if (nameExists && !numberExists) {
+    if (nameExists && nameExists.number !== newNumber) {
+      console.log(nameExists);
       const userConfirmed = window.confirm(
         `${nameExists.name} is already added  to the phonebook. Replace old number with new one? This cannot be undone.`,
       );
       if (userConfirmed) {
+        console.log(nameExists.id);
         personsService
           .updateNumber(nameExists.id, {
             name: nameExists.name,
@@ -63,6 +62,7 @@ const App = () => {
             setPersons(persons.filter((p) => p.id !== nameExists.id));
             console.error("Failed to Update contact", err);
           });
+        console.log(persons);
       } else {
         console.log("Contact update canceled by user.");
       }
