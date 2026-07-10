@@ -29,10 +29,7 @@ const App = () => {
     }
 
     const nameExists = persons.find((person) => person.name === newName);
-
-    const numberExists = persons.find((person) => person.number === newNumber);
-
-    if (nameExists && !numberExists) {
+    if (nameExists && nameExists.number !== newNumber) {
       const userConfirmed = window.confirm(
         `${nameExists.name} is already added  to the phonebook. Replace old number with new one? This cannot be undone.`,
       );
@@ -63,6 +60,7 @@ const App = () => {
             setPersons(persons.filter((p) => p.id !== nameExists.id));
             console.error("Failed to Update contact", err);
           });
+        console.log(persons);
       } else {
         console.log("Contact update canceled by user.");
       }
@@ -76,16 +74,12 @@ const App = () => {
           }, 5000);
           setPersons(persons.concat(data));
         })
-        .catch((err) => {
-          setErrorMessage(` could not be create ne contact`);
+        .catch((error) => {
+          setErrorMessage(error.response.data.error);
           setTimeout(() => {
             setErrorMessage(null);
           }, 5000);
-          console.error("Failed to create contact:", err);
-        })
-        .finally(() => {
-          // setNewName("");
-          //setNewNumber("");
+          console.error(error);
         });
     }
   };
