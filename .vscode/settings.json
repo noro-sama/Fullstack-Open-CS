@@ -1,0 +1,9 @@
+{
+  "editor.formatOnPaste": true,
+  "prettier.semi": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.format": "explicit"
+  }
+}
+// find . -type f -print0 | xargs -0 dos2unix -ic0 | xargs -0 dos2unix -b

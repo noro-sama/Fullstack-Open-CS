@@ -30,12 +30,10 @@ const App = () => {
 
     const nameExists = persons.find((person) => person.name === newName);
     if (nameExists && nameExists.number !== newNumber) {
-      console.log(nameExists);
       const userConfirmed = window.confirm(
         `${nameExists.name} is already added  to the phonebook. Replace old number with new one? This cannot be undone.`,
       );
       if (userConfirmed) {
-        console.log(nameExists.id);
         personsService
           .updateNumber(nameExists.id, {
             name: nameExists.name,
@@ -76,16 +74,12 @@ const App = () => {
           }, 5000);
           setPersons(persons.concat(data));
         })
-        .catch((err) => {
-          setErrorMessage(` could not be create ne contact`);
+        .catch((error) => {
+          setErrorMessage(error.response.data.error);
           setTimeout(() => {
             setErrorMessage(null);
           }, 5000);
-          console.error("Failed to create contact:", err);
-        })
-        .finally(() => {
-          // setNewName("");
-          //setNewNumber("");
+          console.error(error);
         });
     }
   };
