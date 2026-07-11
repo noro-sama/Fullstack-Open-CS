@@ -1,18 +1,13 @@
-const config = require('./utils/config')
-const express = require('express')
-const middleware = require('./utils/middleware')
-const Blog = require('./models/blog')
+const blogRouter = require('express').Router()
+const Blog = require('../models/blog')
 
-const app = express()
-app.use(express.json())
-
-app.get('/api/blogs', (request, response) => {
+blogRouter.get('/blogs', (request, response) => {
   Blog.find({}).then((blogs) => {
     response.json(blogs)
   })
 })
 
-app.get('/api/blogs/:id', (request, response, next) => {
+blogRouter.get('/:id', (request, response, next) => {
   Blog.findById(request.params.id)
     .then((blog) => {
       if (blog) {
@@ -26,7 +21,7 @@ app.get('/api/blogs/:id', (request, response, next) => {
     })
 })
 
-app.delete('/api/blogs/:id', (request, response, next) => {
+blogRouter.delete('/:id', (request, response, next) => {
   Blog.findByIdAndDelete(request.params.id)
     .then(() => {
       response.status(204).end()
@@ -34,7 +29,7 @@ app.delete('/api/blogs/:id', (request, response, next) => {
     .catch((error) => next(error))
 })
 
-app.post('/api/blogs', (request, response, next) => {
+blogRouter.post('/', (request, response, next) => {
   const blog = new Blog(request.body)
 
   blog
@@ -47,7 +42,7 @@ app.post('/api/blogs', (request, response, next) => {
     })
 })
 
-app.put('/api/blogs/:id', (request, response, next) => {
+blogRouter.put('/:id', (request, response, next) => {
   const { title, author, url, likes } = request.body
   Blog.findById(request.params.id)
     .then((blog) => {
@@ -68,8 +63,4 @@ app.put('/api/blogs/:id', (request, response, next) => {
     })
 })
 
-app.use(middleware.errorHandler)
-
-app.listen(config.PORT, () => {
-  console.log(`Server running on port ${config.PORT}`)
-})
+module.exports = blogRouter

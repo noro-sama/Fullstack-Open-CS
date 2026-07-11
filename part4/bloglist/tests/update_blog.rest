@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/6a524c78009ae0f44f5ca670
+Content-Type: application/json
+
+{
+  "title": "Pet lovers",
+  "author": "Cory Chanda",
+  "url": "example.com/blog/pl",
+  "likes": 33
+}

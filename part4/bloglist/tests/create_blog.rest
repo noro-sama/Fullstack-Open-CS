@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
   "title": "Pet lovers",
-  "author": "Cory Chanda",
+  "author": "Caleb Chanda",
   "url": "example.com/blog/pl",
   "likes": 29
 }
