@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { PhoneForm, Person, Filter } from './components/phone'
+import { PhoneForm, Person, Filter } from './components/phone.jsx'
 import personsService from './services/persons.js'
 import {
   SuccessNotification,
