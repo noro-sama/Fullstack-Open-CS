@@ -4,6 +4,9 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
     "source.fixAll.format": "explicit"
+  },
+  "search.exclude": {
+    "**/node_modules": true
   }
 }
 // find . -type f -print0 | xargs -0 dos2unix -ic0 | xargs -0 dos2unix -b
