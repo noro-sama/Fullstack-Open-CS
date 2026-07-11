@@ -1,5 +1,6 @@
-require('dotenv').config()
+const config = require('./utils/config')
 const express = require('express')
+const middleware = require('./utils/middleware')
 const Blog = require('./models/blog')
 
 const app = express()
@@ -11,6 +12,20 @@ app.get('/api/blogs', (request, response) => {
   })
 })
 
+app.get('/api/blogs/:id', (request, response, next) => {
+  Blog.findById(request.params.id)
+    .then((blog) => {
+      if (blog) {
+        response.json(blog)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch((error) => {
+      next(error)
+    })
+})
+
 app.post('/api/blogs', (request, response) => {
   const blog = new Blog(request.body)
 
@@ -19,7 +34,8 @@ app.post('/api/blogs', (request, response) => {
   })
 })
 
-const PORT = 3003
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+app.use(middleware.errorHandler)
+
+app.listen(config.PORT, () => {
+  console.log(`Server running on port ${config.PORT}`)
 })

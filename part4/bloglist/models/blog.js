@@ -1,9 +1,9 @@
-require('dotenv').config()
+const config = require('../utils/config')
 const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
 
-const url = process.env.MONGODB_URI
+const url = config.MONGODB_URI
 console.log('connecting to url')
 mongoose
   .connect(url, { family: 4 })
@@ -22,7 +22,7 @@ const blogSchema = mongoose.Schema({
   },
   author: {
     type: String,
-    minLength: 4,
+    minLength: 3,
     required: true,
   },
   url: {
