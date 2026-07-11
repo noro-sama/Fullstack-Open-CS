@@ -1,9 +1,9 @@
-PUT http://localhost:3003/api/blogs/6a524c78009ae0f44f5ca670
+PUT http://localhost:3003/api/blogs/6a524b9c1eeb5a0a23715c42
 Content-Type: application/json
 
 {
-  "title": "Pet lovers",
-  "author": "Cory Chanda",
-  "url": "example.com/blog/pl",
-  "likes": 33
+  "title": "Box",
+  "author": "Tina Jay",
+  "url": "example.com/blog/b",
+  "likes": 38
 }

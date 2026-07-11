@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs/
 Content-Type: application/json
 
 {
-  "title": "Pet lovers",
-  "author": "Caleb Chanda",
-  "url": "example.com/blog/pl",
-  "likes": 29
+  "title": "Sunny Times",
+  "author": "Bertha Haantinga",
+  "url": "example.com/blog/sunnl",
+  "likes": 5
 }
