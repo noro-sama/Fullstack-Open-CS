@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { PhoneForm, Person, Filter } from './components/phone.'
+import { PhoneForm, Person, Filter } from './components/phone'
 import personsService from './services/persons.js'
 import {
   SuccessNotification,
   ErrorNotification,
-} from './components/Notification.jsx'
+} from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
