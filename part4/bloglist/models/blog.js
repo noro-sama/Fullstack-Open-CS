@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 const config = require('../utils/config')
 const mongoose = require('mongoose')
 
