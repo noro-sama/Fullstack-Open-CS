@@ -1,10 +1,10 @@
+/* eslint-disable no-unused-vars */
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 
-blogRouter.get('/', (request, response) => {
-  Blog.find({}).then((blogs) => {
-    response.json(blogs)
-  })
+blogRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({})
+  response.json(blogs)
 })
 
 blogRouter.get('/:id', (request, response, next) => {
@@ -29,10 +29,10 @@ blogRouter.delete('/:id', (request, response, next) => {
     .catch((error) => next(error))
 })
 
-blogRouter.post('/', (request, response, next) => {
-  const blog = new Blog(request.body)
+blogRouter.post('/', async (request, response, next) => {
+  const newBlog = new Blog(request.body)
 
-  blog
+  newBlog
     .save()
     .then((result) => {
       response.status(201).json(result)
