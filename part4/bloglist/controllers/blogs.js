@@ -7,26 +7,26 @@ blogRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogRouter.get('/:id', (request, response, next) => {
-  Blog.findById(request.params.id)
-    .then((blog) => {
-      if (blog) {
-        response.json(blog)
-      } else {
-        response.status(404).end()
-      }
-    })
-    .catch((error) => {
-      next(error)
-    })
+blogRouter.get('/:id', async (request, response, next) => {
+  try {
+    const blog = await Blog.findById(request.params.id)
+    if (blog) {
+      response.json(blog)
+    } else {
+      response.status(404).end()
+    }
+  } catch (error) {
+    next(error)
+  }
 })
 
-blogRouter.delete('/:id', (request, response, next) => {
-  Blog.findByIdAndDelete(request.params.id)
-    .then(() => {
-      response.status(204).end()
-    })
-    .catch((error) => next(error))
+blogRouter.delete('/:id', async (request, response, next) => {
+  try {
+    await Blog.findByIdAndDelete(request.params.id)
+    response.status(204).end()
+  } catch (error) {
+    next(error)
+  }
 })
 
 blogRouter.post('/', async (request, response, next) => {
@@ -42,25 +42,23 @@ blogRouter.post('/', async (request, response, next) => {
     })
 })
 
-blogRouter.put('/:id', (request, response, next) => {
+blogRouter.put('/:id', async (request, response, next) => {
   const { title, author, url, likes } = request.body
-  Blog.findById(request.params.id)
-    .then((blog) => {
-      if (!blog) {
-        response.status(404).end()
-      }
-      blog.title = title
-      blog.author = author
-      blog.url = url
-      blog.likes = likes
+  try {
+    const blog = await Blog.findById(request.params.id)
+    if (!blog) {
+      response.status(404).end()
+    }
+    blog.title = title
+    blog.author = author
+    blog.url = url
+    blog.likes = likes
 
-      return blog.save().then((updatedBlog) => {
-        response.json(updatedBlog)
-      })
-    })
-    .catch((error) => {
-      next(error)
-    })
+    const updatedBlog = await blog.save()
+    response.json(updatedBlog)
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = blogRouter

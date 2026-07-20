@@ -10,7 +10,9 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development node --watch index.js",
-    "test": "cross-env  NODE_ENV=test node --test",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "lint": "eslint . --format stylish"
   },
   "keywords": [],
@@ -18,9 +20,13 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "jest": "^30.4.2",
+    "jsonwebtoken": "^9.0.3",
     "lodash": "^4.18.1",
+    "mongodb-memory-server": "^11.2.0",
     "mongoose": "^9.7.4"
   },
   "devDependencies": {

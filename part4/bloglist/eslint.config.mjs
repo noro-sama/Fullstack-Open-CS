@@ -9,7 +9,7 @@ export default defineConfig([
     files: ['**/*.js'],
     languageOptions: {
       sourceType: 'commonjs',
-      globals: { ...globals.node },
+      globals: { ...globals, ...globals.jest },
       ecmaVersion: 'latest',
     },
     plugins: {
@@ -21,6 +21,8 @@ export default defineConfig([
       '@stylistic/js/quotes': ['error', 'single'],
       '@stylistic/js/semi': ['error', 'never'],
       eqeqeq: 'error',
+      'no-unused-vars': 'warn',
+      'no-undef': 'warn',
       'no-trailing-spaces': 'error',
       'object-curly-spacing': ['error', 'always'],
       'arrow-spacing': ['error', { before: true, after: true }],
