@@ -14,15 +14,16 @@ const userSchema = mongoose.Schema({
     minLength: 5,
   },
   passwordHash: String,
-  blogs: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Blog',
-    },
-  ],
+})
+
+userSchema.virtual('blogs', {
+  ref: 'Blog',
+  localField: '_id',
+  foreignField: 'user',
 })
 
 userSchema.set('toJSON', {
+  virtuals: true,
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
