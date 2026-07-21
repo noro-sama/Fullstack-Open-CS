@@ -1,0 +1,39 @@
+{
+  "name": "bloglist",
+  "version": "1.0.0",
+  "description": "bloglist app",
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "test": "cross-env NODE_ENV=test jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint . --format stylish"
+  },
+  "keywords": [],
+  "author": "tracy Muso",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jest": "^30.4.2",
+    "jsonwebtoken": "^9.0.3",
+    "lodash": "^4.18.1",
+    "mongodb-memory-server": "^11.2.0",
+    "mongoose": "^9.7.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.7.0",
+    "globals": "^17.7.0",
+    "supertest": "^7.2.2"
+  }
+}
