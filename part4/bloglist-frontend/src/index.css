@@ -45,3 +45,11 @@ form {
   align-items: baseline;
   justify-content: space-between;
 }
+
+.blog-entry {
+  padding-top: 0.8em;
+  padding-left: 0.2em;
+  border: 1px solid gray;
+  margin-bottom: 0.3em;
+  max-width: 500px;
+}
